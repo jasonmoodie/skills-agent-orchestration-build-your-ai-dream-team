@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="dashboard">
+      <header class="dashboard__header">
+        <p class="dashboard__eyebrow">Team overview</p>
+        <h1>Project Pulse</h1>
+        <p class="dashboard__summary">
+          Track project ownership, delivery health, recent activity, and priority at a glance.
+        </p>
+      </header>
+
+      <section class="project-grid" aria-label="Project status cards" data-project-list>
+        <p class="dashboard__message">Loading project updates...</p>
+      </section>
+    </main>
+
+    <script>
+      const allowedStatuses = new Set(["on-track", "at-risk", "blocked", "complete"]);
+      const allowedPriorities = new Set(["high", "medium", "low"]);
+      const projectList = document.querySelector("[data-project-list]");
+
+      function createTextElement(tagName, className, text) {
+        const element = document.createElement(tagName);
+        if (className) {
+          element.className = className;
+        }
+        element.textContent = text;
+        return element;
+      }
+
+      function normalizeValue(value, allowedValues, fallback) {
+        return allowedValues.has(value) ? value : fallback;
+      }
+
+      function showMessage(message) {
+        projectList.replaceChildren(createTextElement("p", "dashboard__message", message));
+      }
+
+      function renderProject(project) {
+        const status = normalizeValue(project.status, allowedStatuses, "blocked");
+        const priority = normalizeValue(project.priority, allowedPriorities, "low");
+
+        const card = document.createElement("article");
+        card.className = `project-card project-card--priority-${priority} project-card--status-${status}`;
+
+        const cardHeader = document.createElement("div");
+        cardHeader.className = "project-card__header";
+
+        const titleGroup = document.createElement("div");
+        titleGroup.className = "project-card__title-group";
+        titleGroup.append(
+          createTextElement("h2", "project-card__name", project.name || "Untitled project"),
+          createTextElement("p", "project-card__owner", `Owner: ${project.owner || "Unassigned"}`)
+        );
+
+        const statusBadge = createTextElement("span", `status-badge status-badge--${status}`, status);
+        cardHeader.append(titleGroup, statusBadge);
+
+        card.append(
+          cardHeader,
+          createTextElement("p", "project-card__activity", project.recentActivity || "No recent activity reported."),
+          createTextElement("p", "project-card__priority", `Priority: ${priority}`)
+        );
+
+        return card;
+      }
+
+      function renderProjects(projects) {
+        if (!Array.isArray(projects) || projects.length === 0) {
+          showMessage("No projects are available yet. Add projects to project-data.json to populate the dashboard.");
+          return;
+        }
+
+        const cards = projects.map(renderProject);
+        projectList.replaceChildren(...cards);
+      }
+
+      async function loadProjects() {
+        try {
+          const response = await fetch("./project-data.json");
+          if (!response.ok) {
+            throw new Error(`Project data request failed with status ${response.status}.`);
+          }
+
+          const data = await response.json();
+          renderProjects(data.projects);
+        } catch (error) {
+          console.error(error);
+          showMessage("Project updates could not be loaded. Confirm project-data.json exists and contains valid project data.");
+        }
+      }
+
+      loadProjects();
+    </script>
+  </body>
+</html>

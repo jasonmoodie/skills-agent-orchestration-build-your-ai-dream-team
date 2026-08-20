@@ -1,0 +1,46 @@
+{
+  "projects": [
+    {
+      "name": "Contributor Onboarding Refresh",
+      "owner": "Mona Chen",
+      "status": "on-track",
+      "recentActivity": "Updated the quick-start checklist and paired two new contributors with mentors.",
+      "priority": "high"
+    },
+    {
+      "name": "API Reliability Sprint",
+      "owner": "Devon Patel",
+      "status": "at-risk",
+      "recentActivity": "Load-test results showed intermittent latency spikes during peak sync windows.",
+      "priority": "high"
+    },
+    {
+      "name": "Documentation Search Upgrade",
+      "owner": "Avery Johnson",
+      "status": "complete",
+      "recentActivity": "Shipped relevance tuning and closed the final accessibility review item.",
+      "priority": "medium"
+    },
+    {
+      "name": "Mobile Issue Triage",
+      "owner": "Sam Rivera",
+      "status": "blocked",
+      "recentActivity": "Waiting on crash logs from the beta channel before prioritizing the next fix.",
+      "priority": "medium"
+    },
+    {
+      "name": "Community Metrics Dashboard",
+      "owner": "Priya Nair",
+      "status": "on-track",
+      "recentActivity": "Connected weekly participation data and drafted the first maintainer summary.",
+      "priority": "low"
+    },
+    {
+      "name": "Security Dependency Review",
+      "owner": "Jordan Kim",
+      "status": "at-risk",
+      "recentActivity": "Two transitive package updates need compatibility checks before the freeze date.",
+      "priority": "high"
+    }
+  ]
+}
